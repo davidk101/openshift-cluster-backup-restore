@@ -30,12 +30,12 @@ function createBackup(){
 
     mkdir -p ${project_name}
     oc project ${project_name}
-    oc get -o yaml --export all > ${project_name}/project.yaml
+    oc get -o yaml all > ${project_name}/project.yaml
     
     # retrieving necessary namespaced resources that may not be included in project.yaml
     for object in $(oc api-resources --namespaced=true -o name)
     do
-    oc get -o yaml --export $object > ${project_name}/$object.yaml
+    oc get -o yaml $object > ${project_name}/$object.yaml
     if [ "$?" != "0" ]; then
         continue
 
