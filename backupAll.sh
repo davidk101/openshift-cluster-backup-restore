@@ -41,15 +41,12 @@ function createBackup(){
     # ignoring the projects named "openshift" automatically created by oc
     if [[ $i != *"openshift"* ]]; then
       mkdir -p "${i}"
-      mkdir -p "uww-db-pg13-pc"
       oc project ${i}
-      oc project uww-db-pg13-pc
-      oc get -o yaml --export all > ${i}/project.yaml
-      oc get -o yaml --export all > uww-db-pg13-pc/project.yaml
+      oc get -o yaml all > ${i}/project.yaml
       # retrieving necessary namespaced resources that may not be included in project.yaml
       for object in $(oc api-resources --namespaced=true -o name)
       do
-        oc get -o yaml --export $object > uww-db-pg13-pc/$object.yaml
+        oc get -o yaml $object > uww-db-pg13-pc/$object.yaml
         if [ "$?" != "0" ]; then
           continue
 
