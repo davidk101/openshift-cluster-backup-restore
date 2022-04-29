@@ -1,9 +1,9 @@
 #!/bin/bash 
 
 # Objective: Restore the resources for a single namespace in an OSD/ROSA cluster 
-# Input: Namespace directory with OpenShift resource YAMLs
-# Version: 1
-# Author: David Kumar 
+# Input: Namespace directory with OpenShift resource YAMLs	
+# Version: 1	
+# Author: David Kumar
 
 function checkPrerequisites(){
   
@@ -23,7 +23,7 @@ function checkPrerequisites(){
   fi
 }
 
-function restoreAll(){
+function restore(){
 
     read -p "Enter project namespace to restore: " project_name
 
@@ -48,29 +48,23 @@ function restoreAll(){
     
 }
 
-# this function restores a single YAML file onto a namespace within the cluster
-function restore(){
+function restoreSpecificFile(){
 
   read -p "Enter project namespace to restore: " project_name
+  read -p "Enter file name to restore: " file_name
 
-  oc project project_name
+  find ${project_name}
   if [[ $? != 0 ]]; then
-      echo "Error! No project found."
-      exit 1
-  fi
-
-  cd project_name
-  if [[ $? != 0 ]]; then
-    echo "Error! Failed to enter a working directory."
+    echo "Error! Project not found."
     exit 1
   fi
 
-  read -p "Enter file name to restore: " file_name  
+  cd ${project_name}
   oc create -f ${file_name}
-
 }
 
 checkPrerequisites
-restoreAll
+restoreSpecificFile
+#restore
 
 echo "Successfully terminating."
